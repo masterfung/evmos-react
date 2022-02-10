@@ -1,0 +1,21 @@
+.ant-layout-header.header-container {
+  background: white;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+
+  .home-link {
+    cursor: pointer;
+    font-size: 1.5em;
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    width: 100%;
+  }
+
+  .menu-system {
+    width: 100%;
+    display: flex;
+    justify-content: end;
+  }
+}

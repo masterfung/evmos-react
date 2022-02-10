@@ -7,8 +7,9 @@ const privateKey3 = process.env.PRIVATE_KEY3;
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
-task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
-  const accounts = await hre.ethers.getSigners();
+task("accounts", "Prints the list of accounts", async () => {
+  // pull from the private keys, there are three
+  const accounts = await ethers.getSigners();
 
   for (const account of accounts) {
     console.log(account.address);
@@ -29,7 +30,7 @@ module.exports = {
     cache: "./src/backend/cache",
     tests: "./src/backend/test"
   },
-  // defaultNetwork: "local",
+  defaultNetwork: "local",
   networks: {
     hardhat: {
     },
