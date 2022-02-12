@@ -1,29 +1,31 @@
 
-import { Button, InputNumber, Typography, Form, Col} from "antd";
+import { Button, InputNumber, Typography, Col, Card} from "antd";
 import {useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { getBlockchain } from "../ethereum";
 import detectEthereumProvider from "@metamask/detect-provider";
 
-const { Title } =  Typography;
+import "./SimpleContract.scss";
+
+const { Title, Text } =  Typography;
 
 const SimpleContractComponent = () => {
   const [simpleStorage, setSimpleStorage] = useState(undefined);
   const [data, setData] = useState(undefined);
   const [error, setError] = useState(undefined);
 
-  useEffect( async () => {
-    let provider = await detectEthereumProvider();
-    if(provider) {
-      await provider.request({ method: "eth_requestAccounts" });
-      const networkId = await provider.request({ method: "net_version" });
-      console.log("networkId", networkId, typeof networkId);
-      if (networkId !== "9000") {
-        setError(`Operation only works on chain-ID 9000 or EVMOS. You are currently ${networkId}. Please switch and refresh network.`);
-        return;
-      } 
-    }
+  useEffect( () => {
     const init = async () => {
+      let provider = await detectEthereumProvider();
+      if(provider) {
+        await provider.request({ method: "eth_requestAccounts" });
+        const networkId = await provider.request({ method: "net_version" });
+        console.log("networkId", networkId, typeof networkId);
+        if (networkId !== "9000") {
+          setError(`Operation only works on chain-ID 9000 or EVMOS. You are currently ${networkId}. Please switch and refresh network.`);
+          return;
+        } 
+      }
       const { simpleStorage } = await getBlockchain(provider);
       const data = await simpleStorage.readData();
       setSimpleStorage(simpleStorage);
@@ -52,40 +54,24 @@ const SimpleContractComponent = () => {
         }
       { data && simpleStorage 
         ? (
-          <div className="container">
-          <div className="row">
-            <div className="col-sm-6">
-              <h2>Data:</h2>
-              <p>{data.toString()}</p>
+          <Col span={16}>
+            <div className="simple-storage-container">
+              <Title>Interact with Ethereum Smart Contract</Title>
+              <Text>A simple smart contract to save an integer.</Text>
+              <Card title="Simple Contract" className="simple-contract-card">
+                <h2>Data:</h2>
+                <p>{data.toString()}</p>
+                <h2>Change data (numbers only)</h2>
+                <InputNumber 
+                  type="text" 
+                  className="integer-input" 
+                  placeholder="data"
+                  onPressEnter={updateData}
+                />
+              </Card>
             </div>
 
-            <div className="">
-              <h2>Change data (numbers only)</h2>
-              <Form className="" onFinish={updateData}>
-                <Form.Item
-                  name="input"
-                  valuePropName="checked"
-                  wrapperCol={{
-                    offset: 8,
-                    span: 16,
-                  }}
-                >
-                  <InputNumber 
-                    type="text" 
-                    className="" 
-                    placeholder="data"
-                  />
-                </Form.Item>
-                <Button 
-                  type="primary" htmlType="submit" 
-                >
-                  Submit
-                </Button>
-              </Form>
-            </div>
-
-          </div>
-        </div>
+        </Col>
         ) : <div>
         {error 
           ? (

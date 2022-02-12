@@ -6,7 +6,7 @@ async function main() {
   console.log(`Deploying contracts with the account: ${deployer.address}`);
 
   const balance = await deployer.getBalance();
-  console.log(`Acount balance: ${balance.toString()}`);
+  console.log(`Account balance: ${balance.toString()}`);
 
   const SimpleStorage = await ethers.getContractFactory("SimpleStorage");
   const storage = await SimpleStorage.deploy();
@@ -19,7 +19,7 @@ async function main() {
   }
 
   fs.writeFileSync(
-    contractsDir + "/contract-address.json",
+    contractsDir + "/contract-address-simple-storage.json",
     JSON.stringify({ SimpleStorage: storage.address }, undefined, 2)
   );
 

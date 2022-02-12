@@ -6,6 +6,7 @@ const { Title, Text } = Typography;
 const HomePage = () => {
   return (
     <Col span={20} offset={2}>
+      <Title>Search</Title>
       <SearchBar />
     </Col>
   )

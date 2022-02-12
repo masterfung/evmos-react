@@ -1,6 +1,6 @@
 import { ethers, Contract } from 'ethers';
 import SimpleStorage from '../contractsData/SimpleStorage.json';
-import TokenAddress from '../contractsData/contract-address.json'
+import SimpleStorageTokenAddress from '../contractsData/contract-address-simple-storage.json';
 
 
 // helper function to obtain all the necessary information 
@@ -11,7 +11,7 @@ export const getBlockchain = (provider) =>
       const providerEthers = new ethers.providers.Web3Provider(provider);
       const signer = providerEthers.getSigner();
       const simpleStorage = new Contract(
-        TokenAddress.SimpleStorage,
+        SimpleStorageTokenAddress.SimpleStorage,
         SimpleStorage.abi,
         signer
       );

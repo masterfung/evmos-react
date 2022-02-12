@@ -17,7 +17,7 @@ ReactDOM.render(
         <Route path="/" element={<App />}>
           <Route index element={<HomePage />} />
           <Route path="interact" element={<SimpleContractComponent />} />
-          <Route path="transactions" element={<Transactions />} />
+          <Route path="transactions/:address" element={<Transactions />} />
           <Route path="transaction/:transactionHash" element={<Transaction />} />
 
         </Route>
