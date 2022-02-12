@@ -1,32 +1,51 @@
-import { Input, Select, Button, Col, Card } from "antd";
+import { Input, Select, Button, Col, notification } from "antd";
 import { useState } from "react";
 import { ethers } from "ethers";
 import {ethToEvmos, evmosToEth} from "@hanchon/ethermint-address-converter";
-import Title from "antd/lib/typography/Title";
-import Text from "antd/lib/typography/Text";
 import AccountDetailCard from "../accountDetailCard/AccountDetailCard";
 import "./SearchBar.scss";
+import { RPC_URL } from "../../utils/constants";
+import { useNavigate } from "react-router-dom";
+import { validate_txhash } from "../../utils/utils";
 
 const { Option } = Select;
-
-const keyConverter = {
-  "ethAddress": "Ethereum Address",
-  "evmosAddress": "Evmos Address",
-  "ethBalance": "ETH Balance",
-  "evmosBalance": "Evmos Balance"
-}
 
 const SearchBar = () => {
   const [select, setSelect] = useState("Ethereum");
   const [input, setInput] = useState(undefined);
   const [result, setResult] = useState(undefined);
+  const navigate = useNavigate();
 
   const handleSearch = () => {
     if (input.length === 0) return;
+    if (input.includes("evmos") && select === "Ethereum") {
+      notification.warning({
+        message: "Incorrect Blockchain",
+        description: "Please update chain to Evmos"
+      });
+      return;
+    } else if (input.includes("0x") && select === "Evmos") {
+      notification.warning({
+        message: "Incorrect Blockchain",
+        description: "Please update chain to Ethereum"
+      });
+      return;
+    }
     const data = {};
     const initiate = async () => {
       if(select === "Ethereum") {
-        const provider = new ethers.providers.JsonRpcProvider();
+        const provider = new ethers.providers.JsonRpcProvider(RPC_URL);
+        if (!ethers.utils.isAddress(input) && validate_txhash(input)) {
+          try {
+            const txData = await provider.getTransactionReceipt(input);
+            if (txData.blockNumber) {
+              navigate(`transaction/${input}`);
+            }
+  
+          } catch (e) {
+            console.log('Error with tx hash inputted', e);
+          }
+        }
         const balance = await provider.getBalance(input);
         let address = ethToEvmos(input);
         console.log('converted addy', address);
@@ -40,14 +59,13 @@ const SearchBar = () => {
       setResult(previousState => ({...previousState, ...data}));
     }
 
-    
     initiate();
   }
 
   console.log('res', result);
 
   return(
-    <Col span={20} offset={2}>
+    <Col sm={24} md={16} lg={16} xl={16} xxl={16}>
       <Input.Group compact className="search-bar">
         <Select defaultValue="Ethereum" onSelect={(e, f) => setSelect(e)}>
           <Option value="Ethereum">Ethereum</Option>

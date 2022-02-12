@@ -1,7 +1,13 @@
-.simple-storage-container {
-  margin: 20px 0;
+.simple-storage-parent-container {
+  padding: 25px;
+  .simple-storage-container {
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
 
-  .simple-contract-card {
-    margin: 20px 0;
+
+    .simple-contract-card {
+      margin: 20px 0;
+    }
   }
 }

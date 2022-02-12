@@ -1,0 +1,1 @@
+export const RPC_URL = "http://0.0.0.0:8545";

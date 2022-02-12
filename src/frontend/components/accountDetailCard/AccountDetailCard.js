@@ -1,6 +1,7 @@
 
 import { Card, Tooltip, Button } from "antd";
 import { CopyTwoTone } from "@ant-design/icons/lib/icons";
+import { useNavigate } from "react-router-dom";
 import { copyToClipboard } from "../../utils/utils";
 
 import "./AccountDetailCard.scss";
@@ -13,6 +14,7 @@ const keyConverter = {
 }
 
 const AccountDetailCard = ({result}) => {
+  const navigate = useNavigate();
   return (
     result ? (
       <Card title="Account Details" className="card-container">
@@ -26,8 +28,9 @@ const AccountDetailCard = ({result}) => {
           )
         })
       }
-      <Button>View Transactions for Ethereum</Button>
-      <Button>View Transactions for Evmos</Button>
+      <Button type="primary" onClick={() => navigate(`/transactions/${result.ethAddress}`)}>View Transactions for Ethereum</Button>
+      { "  " }
+      <Button type="primary" onClick={() => navigate(`/transactions/${result.evmosAddress}`)}>View Transactions for Evmos</Button>
 
     </Card>
     ) : null

@@ -1,24 +1,35 @@
 
-import { Button, InputNumber, Typography, Col, Card} from "antd";
+import { 
+  Button, 
+  InputNumber, 
+  Typography, 
+  Col, 
+  Card,
+  notification,
+} from "antd";
 import {useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { getBlockchain } from "../ethereum";
 import detectEthereumProvider from "@metamask/detect-provider";
 
+import { RPC_URL } from "../../utils/constants";
 import "./SimpleContract.scss";
 
 const { Title, Text } =  Typography;
 
 const SimpleContractComponent = () => {
   const [simpleStorage, setSimpleStorage] = useState(undefined);
+  const [account, setAccount] = useState(undefined);
+  // const [processing, setProcessing] = useState(false);
   const [data, setData] = useState(undefined);
   const [error, setError] = useState(undefined);
 
   useEffect( () => {
     const init = async () => {
       let provider = await detectEthereumProvider();
+      let accounts;
       if(provider) {
-        await provider.request({ method: "eth_requestAccounts" });
+        accounts = await provider.request({ method: "eth_requestAccounts" });
         const networkId = await provider.request({ method: "net_version" });
         console.log("networkId", networkId, typeof networkId);
         if (networkId !== "9000") {
@@ -28,33 +39,35 @@ const SimpleContractComponent = () => {
       }
       const { simpleStorage } = await getBlockchain(provider);
       const data = await simpleStorage.readData();
+      setAccount(accounts[0].toLowerCase());
       setSimpleStorage(simpleStorage);
       setData(data);
     };
     init();
   }, []);
 
-  const updateData = async ({input}) => {
-    const tx = await simpleStorage.updateData(input);
+  const updateData = async (e) => {
+    const tx = await simpleStorage.updateData(Number(e.target.value));
     await tx.wait();
-    console.log("TX", tx);
-    const provider = new ethers.providers.JsonRpcProvider();
-    const resss = await provider.getTransaction(tx.hash);
-    console.log("!!!", resss);
+    const provider = new ethers.providers.JsonRpcProvider(RPC_URL);
+    const transactionDetail = await provider.getTransaction(tx.hash);
+    const existingTransactions = JSON.parse(localStorage.getItem(account)) || [];
+    existingTransactions.push(transactionDetail);
+    localStorage.setItem(account, JSON.stringify(existingTransactions));
     const newData = await simpleStorage.readData();
     setData(newData);
   };
 
   return (
-    <Col span={20} offset={2}>
+    <Col sm={20} md={20} lg={24} xl={24} xxl={24} className="simple-contract-parent-container">
         
-        { typeof simpleStorage === undefined || typeof data === undefined
-        ? "Loading..."
-        : null
-        }
+      { typeof simpleStorage === undefined || typeof data === undefined
+      ? "Loading..."
+      : null
+      }
       { data && simpleStorage 
         ? (
-          <Col span={16}>
+          <Col sm={24} md={24} lg={24} xl={24} xxl={24}>
             <div className="simple-storage-container">
               <Title>Interact with Ethereum Smart Contract</Title>
               <Text>A simple smart contract to save an integer.</Text>
@@ -70,17 +83,19 @@ const SimpleContractComponent = () => {
                 />
               </Card>
             </div>
-
         </Col>
-        ) : <div>
-        {error 
-          ? (
-            <>
-              <Title>{error}</Title>
-              <Button onClick={() => window.location.reload()}>Refresh Page</Button>
-            </>
-          ) : null}
+        ) : (
+          <div>
+            {error 
+              ? (
+                <>
+                  <Title>{error}</Title>
+                  <Button onClick={() => window.location.reload()}>Refresh Page</Button>
+                </>
+              ) 
+              : null}
         </div>
+        )
       }
     </Col>
   )
