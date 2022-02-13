@@ -1,0 +1,11 @@
+.configuration-page-container {
+  margin: 0 auto;
+  width: 100%;
+  .cosmos, .ethereum {
+    margin: 10px 0;
+    .container {
+      margin: 15px;
+      display: inline-block;
+    }
+  }
+}

@@ -6,7 +6,7 @@ import AccountDetailCard from "../accountDetailCard/AccountDetailCard";
 import "./SearchBar.scss";
 import { EVM_RPC_URL } from "../../utils/constants";
 import { useNavigate } from "react-router-dom";
-import { validate_txhash } from "../../utils/utils";
+import { isValidEthereumDataString, validate_txhash } from "../../utils/utils";
 
 const { Option } = Select;
 
@@ -34,6 +34,10 @@ const SearchBar = () => {
     const data = {};
     const initiate = async () => {
       if(select === "Ethereum") {
+        const result = isValidEthereumDataString(input);
+        if (!result) {
+          return;
+        }
         const provider = new ethers.providers.JsonRpcProvider(EVM_RPC_URL);
         if (!ethers.utils.isAddress(input) && validate_txhash(input)) {
           try {

@@ -1,10 +1,11 @@
-import { Col, Typography, Card } from "antd";
+import { Col, Typography, Card} from "antd";
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { useParams } from "react-router-dom";
 
 import "./Transaction.scss";
 import { EVM_RPC_URL } from "../../utils/constants";
+import { isValidEthereumDataString } from "../../utils/utils";
 
 const { Title } = Typography;
 
@@ -19,6 +20,10 @@ const Transaction = () => {
     const init = async () => {
       let { transactionHash } = params;
       transactionHash = transactionHash.toLowerCase();
+      const result = isValidEthereumDataString(transactionHash);
+      if (!result) {
+        return;
+      }
       console.log('transaction hash', transactionHash);
       let provider = new ethers.providers.JsonRpcProvider(EVM_RPC_URL);
       const txInfo = await provider.send("eth_getTransactionByHash", [
@@ -35,14 +40,16 @@ const Transaction = () => {
     <Col sm={20} md={16} lg={16} xl={16} xxl={16}  className="transaction-detail-container">
       <Title>Transaction</Title>
       <Card title="Transaction Detail" className="card-container">
-        {transaction && Object.keys(transaction).map((key, index) => {
+        {
+          (transaction && Object.keys(transaction).map((key, index) => {
           if (!ethers.utils.isAddress(transaction[key]) && !stableKeys.includes(key)) {
             return <p key={index}><b>{key}</b>: {Number(transaction[key])}</p>
-         }
-          return (
-            <p key={index}><b>{key}</b>: {transaction[key]}</p>
-          )
-        })}
+          }
+            return (
+              <p key={index}><b>{key}</b>: {transaction[key]}</p>
+            )
+          })) || "Incorrect hash has been detected. Please validate and try again."
+        }
       </Card>
     </Col>
   )
