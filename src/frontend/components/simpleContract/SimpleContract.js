@@ -12,7 +12,7 @@ import { ethers } from "ethers";
 import { getBlockchain } from "../ethereum";
 import detectEthereumProvider from "@metamask/detect-provider";
 
-import { RPC_URL } from "../../utils/constants";
+import { EVM_RPC_URL } from "../../utils/constants";
 import "./SimpleContract.scss";
 
 const { Title, Text } =  Typography;
@@ -30,6 +30,7 @@ const SimpleContractComponent = () => {
       let accounts;
       if(provider) {
         accounts = await provider.request({ method: "eth_requestAccounts" });
+        console.log('accounts', accounts);
         const networkId = await provider.request({ method: "net_version" });
         console.log("networkId", networkId, typeof networkId);
         if (networkId !== "9000") {
@@ -49,7 +50,7 @@ const SimpleContractComponent = () => {
   const updateData = async (e) => {
     const tx = await simpleStorage.updateData(Number(e.target.value));
     await tx.wait();
-    const provider = new ethers.providers.JsonRpcProvider(RPC_URL);
+    const provider = new ethers.providers.JsonRpcProvider(EVM_RPC_URL);
     const transactionDetail = await provider.getTransaction(tx.hash);
     const existingTransactions = JSON.parse(localStorage.getItem(account)) || [];
     existingTransactions.push(transactionDetail);

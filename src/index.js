@@ -9,6 +9,8 @@ import SimpleContractComponent from './frontend/components/simpleContract/Simple
 import HomePage from './frontend/components/home/Home';
 import Transactions from './frontend/components/transactions/Transactions';
 import Transaction from './frontend/components/transaction/Transaction';
+import ConfigurationPage from './frontend/components/configuration/Configuration';
+import NoMatch from "./frontend/components/noMatchPath/NoMatchPath";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -19,7 +21,8 @@ ReactDOM.render(
           <Route path="interact" element={<SimpleContractComponent />} />
           <Route path="transactions/:address" element={<Transactions />} />
           <Route path="transaction/:transactionHash" element={<Transaction />} />
-
+          <Route path="reflow/configuration/555" element={<ConfigurationPage />} />
+          <Route path="*" element={<NoMatch />} />
         </Route>
       </Routes>
     </BrowserRouter>

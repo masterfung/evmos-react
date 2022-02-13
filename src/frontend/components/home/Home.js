@@ -1,12 +1,15 @@
 import { Col, Typography } from "antd";
 import SearchBar from "../searchBar/SearchBar";
 
+import "./Home.scss";
+
 const { Title, Text } = Typography;
 
 const HomePage = () => {
   return (
-    <Col sm={24} md={16} lg={16} xl={16} xxl={16} >
+    <Col sm={24} md={20} lg={20} xl={20} xxl={20} className="home-page-container">
       <Title>Search</Title>
+      <Text>Search by inputting a valid address for Ethereum or Evmos to get</Text>
       <SearchBar />
     </Col>
   )

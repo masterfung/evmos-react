@@ -4,7 +4,7 @@ import { ethers } from "ethers";
 import {ethToEvmos, evmosToEth} from "@hanchon/ethermint-address-converter";
 import AccountDetailCard from "../accountDetailCard/AccountDetailCard";
 import "./SearchBar.scss";
-import { RPC_URL } from "../../utils/constants";
+import { EVM_RPC_URL } from "../../utils/constants";
 import { useNavigate } from "react-router-dom";
 import { validate_txhash } from "../../utils/utils";
 
@@ -34,7 +34,7 @@ const SearchBar = () => {
     const data = {};
     const initiate = async () => {
       if(select === "Ethereum") {
-        const provider = new ethers.providers.JsonRpcProvider(RPC_URL);
+        const provider = new ethers.providers.JsonRpcProvider(EVM_RPC_URL);
         if (!ethers.utils.isAddress(input) && validate_txhash(input)) {
           try {
             const txData = await provider.getTransactionReceipt(input);
@@ -65,7 +65,7 @@ const SearchBar = () => {
   console.log('res', result);
 
   return(
-    <Col sm={24} md={16} lg={16} xl={16} xxl={16}>
+    <Col sm={24} md={20} lg={20} xl={20} xxl={20} className="search-bar-container">
       <Input.Group compact className="search-bar">
         <Select defaultValue="Ethereum" onSelect={(e, f) => setSelect(e)}>
           <Option value="Ethereum">Ethereum</Option>

@@ -4,7 +4,7 @@ import { ethers } from "ethers";
 import { useParams } from "react-router-dom";
 
 import "./Transaction.scss";
-import { RPC_URL } from "../../utils/constants";
+import { EVM_RPC_URL } from "../../utils/constants";
 
 const { Title } = Typography;
 
@@ -20,7 +20,7 @@ const Transaction = () => {
       let { transactionHash } = params;
       transactionHash = transactionHash.toLowerCase();
       console.log('transaction hash', transactionHash);
-      let provider = new ethers.providers.JsonRpcProvider(RPC_URL);
+      let provider = new ethers.providers.JsonRpcProvider(EVM_RPC_URL);
       const txInfo = await provider.send("eth_getTransactionByHash", [
         transactionHash,
       ]);
@@ -29,7 +29,7 @@ const Transaction = () => {
     }
 
     init();
-  }, []);
+  }, [params]);
 
   return (
     <Col sm={20} md={16} lg={16} xl={16} xxl={16}  className="transaction-detail-container">

@@ -1,7 +1,7 @@
 .App {
   .app-content {
     margin: 0 auto;
-    height: calc(100vh - 135px);
+    min-height: calc(100vh - 135px);
     background-color:  white;
     padding: 20px 10px;
     width: 90%;

@@ -1,11 +1,10 @@
-import { Layout, Row, Typography } from "antd";
+import { Layout, Row } from "antd";
 import { Outlet } from "react-router-dom";
 
 import HeaderContainer from "./headerContainer/HeaderContainer";
 import "./App.scss";
 
 const { Content, Footer } = Layout;
-const { Title } = Typography;
 
 const App = () => {
 

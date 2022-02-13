@@ -1,15 +1,11 @@
 import { Col, Typography, List } from "antd";
-import { BigNumber, Contract, ethers } from "ethers";
 import { useState, useEffect } from "react";
-import { getBlockchain } from "../ethereum";
 import { useParams } from "react-router-dom";
-import SimpleContractAddress from "../../contractsData/contract-address-simple-storage.json";
 import { Link } from "react-router-dom";
-import detectEthereumProvider from "@metamask/detect-provider";
 
 import "./Transactions.scss";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 const Transactions = () => {
   const [data, setData] = useState(undefined);
@@ -20,11 +16,10 @@ const Transactions = () => {
     const { address } = params;
     const transactions = JSON.parse(localStorage.getItem(address.toLowerCase()));
     setData(transactions);
-    console.log('!!! transactions', address, transactions)
-  }, []);
+  }, [params]);
 
   return (
-    <Col sm={20} md={16} lg={16} xl={16} xxl={16} >
+    <Col sm={24} md={24} lg={24} xl={24} xxl={24} >
       <Title>Transactions</Title>
       <List
         bordered
