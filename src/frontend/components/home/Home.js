@@ -5,6 +5,7 @@ import "./Home.scss";
 
 const { Title, Text } = Typography;
 
+// HomePage takes no props and handles the origin index page for the website. SearchBar is a child component that renders within the Outlet in App.
 const HomePage = () => {
   return (
     <Col sm={24} md={20} lg={20} xl={20} xxl={20} className="home-page-container">

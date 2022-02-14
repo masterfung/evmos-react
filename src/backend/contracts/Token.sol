@@ -2,9 +2,9 @@
 pragma solidity ^0.8.0;
 
 contract Token {
-  string public name = "Serendipity";
-  string public symbol = "SER";
-  uint public totalSupply = 100000;
+  string public name = "AlpacaMyBag";
+  string public symbol = "AMB";
+  uint public totalSupply = 10000;
   address public owner;
   mapping(address => uint) balances;
 

@@ -5,6 +5,7 @@ import "./HeaderContainer.scss";
 
 const { Title } = Typography;
 
+// HeaderContainer takes no props and scaffolds the Header of the application. It lives above the Content structure and handles the navigation of three right links with the home through React Router.
 const HeaderContainer = () => {
   const navigate = useNavigate()
   return (

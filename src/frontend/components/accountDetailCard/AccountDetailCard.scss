@@ -1,3 +1,12 @@
 .card-container {
   margin: 20px 0;
+
+  .button-container {
+    display: flex;
+    justify-content: center;
+    align-content: space-around;
+    > button:first-child {
+      margin-right: 15px;
+    }
+  }
 }

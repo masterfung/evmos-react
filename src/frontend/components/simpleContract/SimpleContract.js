@@ -14,9 +14,11 @@ import detectEthereumProvider from "@metamask/detect-provider";
 
 import { EVM_RPC_URL } from "../../utils/constants";
 import "./SimpleContract.scss";
+import { getLocalStorageAndStore } from "../../utils/utils";
 
 const { Title, Text } =  Typography;
 
+// SimpleContractComponent has no props taken in. This is a simple contract client component for the solidity contract. It sets integer values (uint in Solidity) and utilizes Metamask to interface with client to approve/reject changes. The data value was the last encountered value on the blockchain since deployment. The transaction logs (if any made) will be saved to LocalStorage
 const SimpleContractComponent = () => {
   const [simpleStorage, setSimpleStorage] = useState(undefined);
   const [account, setAccount] = useState(undefined);
@@ -52,9 +54,7 @@ const SimpleContractComponent = () => {
     await tx.wait();
     const provider = new ethers.providers.JsonRpcProvider(EVM_RPC_URL);
     const transactionDetail = await provider.getTransaction(tx.hash);
-    const existingTransactions = JSON.parse(localStorage.getItem(account)) || [];
-    existingTransactions.push(transactionDetail);
-    localStorage.setItem(account, JSON.stringify(existingTransactions));
+    getLocalStorageAndStore(account, transactionDetail)
     const newData = await simpleStorage.readData();
     setData(newData);
   };

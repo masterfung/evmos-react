@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import "./NoMatch.scss";
 
+// NoMatch takes no props and handles the routing call for any non-matching urls user enter into the web browser
 const NoMatch = () => {
   return (
     <Col className="no-match-container">

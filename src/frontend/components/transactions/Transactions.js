@@ -7,10 +7,10 @@ import "./Transactions.scss";
 
 const { Title } = Typography;
 
+// Transaction is a component that has no props but uses the URL and React Router to pull params to pull transactions from LocalStorage.
 const Transactions = () => {
   const [data, setData] = useState(undefined);
   const params = useParams();
-  console.log(params);
 
   useEffect(() => {
     const { address } = params;
