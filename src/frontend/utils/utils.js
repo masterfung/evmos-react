@@ -28,15 +28,16 @@ export function isValidEthereumDataString(str) {
 //  Utility function that takes in an address and tx data and saves it to the localStorage. If key exists, it appends but if it does not, it creates a new array. Returns nothing
 export function getLocalStorageAndStore(address, txData) {
   const mainWallet = address.toLowerCase();
+  if (txData.hash === null) return;
   const existingTransactions = JSON.parse(localStorage.getItem(mainWallet)) || [];
     console.log(txData);
     
-    existingTransactions.push(txData);
-    console.log('existing trans after push', existingTransactions);
-    localStorage.setItem(mainWallet, JSON.stringify(existingTransactions));
+  existingTransactions.push(txData);
+  console.log('existing trans after push', existingTransactions);
+  localStorage.setItem(mainWallet, JSON.stringify(existingTransactions));
 }
 /**
-TODO: Whenever there are more contracts deployed, this function can evolved to take in extra params (token abi, and token deployed address) so it is more flexible. Since it is being used once, the concept is baked as is. Easy to transpose when the time comes.
+TODO: Whenever there are more contracts deployed, this function can evolved to take in extra params (token abi, and token deployed address) so it is more flexible. Since it is being used once, the concept is baked as is. Easy to transpose when the time comes. This simplication of logic applies to the transferToken function as well.
 
 **/
 // getTokenContractReferenceAndReturnBalance takes in address and provider--signer input to return back an object signifying if the user holds any ERC-20 tokens from stated Contract. . 
@@ -55,4 +56,17 @@ export async function getTokenContractReferenceAndReturnBalance(address, signer)
     token: tokenName,
     symbol
   };
+}
+
+// helper function thats takes in toAddress, amount, and signer to transfer token to a defined location
+export async function transferToken(to, amount, signer) {
+  const contract = new Contract(
+    TokenStorageLocation.Token,
+    Token.abi,
+    signer
+  );
+  const signerAddress = await signer.getAddress();
+  const tx = await contract.transfer(to, amount);
+  getLocalStorageAndStore(signerAddress, tx);
+  return tx
 }

@@ -6,6 +6,7 @@ import { copyToClipboard } from "../../utils/utils";
 
 import "./AccountDetailCard.scss";
 
+// Key converter for display on client end when Object.entries are iterated
 const keyConverter = {
   "ethAddress": "Ethereum Address",
   "evmosAddress": "Evmos Address",
@@ -21,7 +22,6 @@ const AccountDetailCard = ({result}) => {
       <Card title="Account Details" className="card-container">
       {
         Object.entries(result).map((entry, index) => {
-          console.log(entry);
           if (entry[0] === "erc20" && entry[1] !== undefined && Number(entry[1].balance) > 0) {
             return (
               <p key={index}><b>Token</b>: <code>{`${entry[1].balance} ${entry[1].token} [${entry[1].symbol}]`} <Tag color="cyan">ERC20 Token</Tag></code></p>

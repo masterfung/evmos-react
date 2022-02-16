@@ -11,10 +11,9 @@ import {useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { getBlockchain } from "../ethereum";
 import detectEthereumProvider from "@metamask/detect-provider";
-
 import { EVM_RPC_URL } from "../../utils/constants";
-import "./SimpleContract.scss";
 import { getLocalStorageAndStore } from "../../utils/utils";
+import "./SimpleContract.scss";
 
 const { Title, Text } =  Typography;
 

@@ -11,6 +11,8 @@ import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { assertIsBroadcastTxSuccess, SigningStargateClient, StargateClient } from "@cosmjs/stargate";
 import { stringToPath } from "@cosmjs/crypto";
 import { ethers } from "ethers";
+import detectEthereumProvider from "@metamask/detect-provider";
+
 import { 
   TENDERMINT_RPC_URL, 
   EVM_RPC_URL, 
@@ -19,13 +21,29 @@ import {
   privateKeyReference,
   evmosChainId
  } from "../../utils/constants";
-import { getLocalStorageAndStore } from "../../utils/utils";
+import { getLocalStorageAndStore, transferToken } from "../../utils/utils";
 import "./Configuration.scss";
 
+// For internal usage only! This is a configuration page that should be behind admin rights but for the sakes of this repo, it is meant as a demo to trigger action. This function holds operation for Evmos related and Ethereum related methods. At this time, Evmos based entities are not fully functioning.
 const ConfigurationPage = () => {
   const [ethAmount, setEthAmount] = useState(0);
   const [ethAddress, setEthAddress] = useState(undefined);
   const [keySelection, setKeySelection] = useState("1");
+
+  const [inputAMB, setInputAMB] = useState(0);
+
+  const validateAndSetEthereumAddress = (e) => {
+    let input = e.target.value;
+    input = input.toLowerCase();
+    if (ethers.utils.isAddress(input)) {
+      setEthAddress(input);
+      return
+    }
+    return notification.error({
+      message: "Cannot use entered address",
+      description: "Please verify and try again"
+    });
+  }
   
   const cosmosTriggerConnectAndSendTo = async (toAddress) => {
     
@@ -57,6 +75,20 @@ const ConfigurationPage = () => {
     getLocalStorageAndStore(wallet.address, txData);
   }
 
+  // handler method to transfer token (AlpacaMyBag) from owner to recipient with metamask
+  const sendAlpacaMyBagTokenTo = async () => {
+    let provider = await detectEthereumProvider();
+    const metamask = new ethers.providers.Web3Provider(provider);
+    const signer = metamask.getSigner();
+    const tx = await transferToken(ethAddress, Number(inputAMB), signer);
+    tx.hash ? notification.success({
+      message: "Token transfer was successful",
+    }) : notification.warning({
+      message: "Error occurred with token transfer",
+      description: "Please retry again later"
+    });
+  }
+
   return (
     <Col sm={24} md={20} className="configuration-page-container">
       <Card title="Cosmos Section" className="cosmos">
@@ -76,6 +108,21 @@ const ConfigurationPage = () => {
           <p>Amount: <Input 
           placeholder="Enter Amount to Transfer"
           onChange={(e) => setEthAmount(e.target.value)} /></p>
+        
+          <p>
+          To:
+          <Input 
+          placeholder="Enter To ETH Address"
+          onChange={(e) => validateAndSetEthereumAddress(e)} />
+          </p>
+          <Button type="primary" onClick={() => sendEthToAddress()}>Transfer Eth to Account</Button>
+        </div>
+
+        <div className="container">
+          <p>Transfer AMB (an ERC-20 token) from an address and to recipient</p>
+          <p>Amount: <Input 
+          placeholder="Enter Amount to Transfer"
+          onChange={(e) => setInputAMB(Number(e.target.value))} /></p>
           
           <p>
           From Account
@@ -89,22 +136,10 @@ const ConfigurationPage = () => {
           <p>
           To:
           <Input 
-          placeholder="Enter TO ETH Address"
-          onChange={(e) => {
-            let input = e.target.value;
-            input = input.toLowerCase();
-            if (ethers.utils.isAddress(input)) {
-              setEthAddress(input);
-              return
-            }
-            return notification.error({
-              message: "Cannot use entered address",
-              description: "Please verify and try again"
-            })
-          }
-          } />
+          placeholder="Enter To ETH Address"
+          onChange={(e) => validateAndSetEthereumAddress(e)} />
           </p>
-          <Button type="primary" onClick={() => sendEthToAddress()}>Transfer Eth to Account</Button>
+          <Button type="primary" onClick={() => sendAlpacaMyBagTokenTo()}>Transfer AMB</Button>
         </div>
       </Card>
     </Col>
